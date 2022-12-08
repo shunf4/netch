@@ -216,6 +216,15 @@ void tcpConnectRequest(ENDPOINT_ID id, PNF_TCP_CONN_INFO info)
 		return;
 	}
 
+	// shunf4 mod: bypass ipv6
+	if (info->ip_family == AF_INET6)
+	{
+		nf_tcpDisableFiltering(id);
+
+		wcout << "[Redirector][EventHandler][tcpConnectRequest][" << id << "][" << info->processId << "][shunf4 bypass IPv6] " << GetProcessName(info->processId) << endl;
+		return;
+	}
+
 	SOCKADDR_IN6 client;
 	memcpy(&client, info->localAddress, sizeof(SOCKADDR_IN6));
 
